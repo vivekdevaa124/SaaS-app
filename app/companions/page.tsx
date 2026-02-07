@@ -1,8 +1,15 @@
-import {getAllCompanions} from "@/lib/actions/companion.actions";
+import { getAllCompanions } from "@/lib/actions/companion.actions";
 import CompanionCard from "@/components/CompanionCard";
-import {getSubjectColor} from "@/lib/utils";
+import { getSubjectColor } from "@/lib/utils";
 import SearchInput from "@/components/SearchInput";
 import SubjectFilter from "@/components/SubjectFilter";
+
+interface SearchParams {
+    searchParams: Promise<{
+        subject?: string;
+        topic?: string;
+    }>
+}
 
 const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
     const filters = await searchParams;
@@ -25,7 +32,8 @@ const CompanionsLibrary = async ({ searchParams }: SearchParams) => {
                     <CompanionCard
                         key={companion.id}
                         {...companion}
-                        color={getSubjectColor(companion.subject)}
+                        color={getSubjectColor(companion.subject) as string}
+                        bookmarked={false}
                     />
                 ))}
             </section>

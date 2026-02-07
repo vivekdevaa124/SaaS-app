@@ -10,7 +10,7 @@ import {
 import { subjects } from "@/constants";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { formUrlQuery, removeKeysFromUrlQuery } from "@jsmastery/utils";
+import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/utils";
 
 const SubjectFilter = () => {
     const router = useRouter();

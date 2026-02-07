@@ -21,23 +21,23 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {subjects} from "@/constants";
-import {Textarea} from "@/components/ui/textarea";
-import {createCompanion} from "@/lib/actions/companion.actions";
-import {redirect} from "next/navigation";
+import { subjects } from "@/constants";
+import { Textarea } from "@/components/ui/textarea";
+import { createCompanion } from "@/lib/actions/companion.actions";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
-    name: z.string().min(1, { message: 'Companion is required.'}),
-    subject: z.string().min(1, { message: 'Subject is required.'}),
-    topic: z.string().min(1, { message: 'Topic is required.'}),
-    voice: z.string().min(1, { message: 'Voice is required.'}),
-    style: z.string().min(1, { message: 'Style is required.'}),
-    duration: z.coerce.number().min(1, { message: 'Duration is required.'}),
+    name: z.string().min(1, { message: 'Companion is required.' }),
+    subject: z.string().min(1, { message: 'Subject is required.' }),
+    topic: z.string().min(1, { message: 'Topic is required.' }),
+    voice: z.string().min(1, { message: 'Voice is required.' }),
+    style: z.string().min(1, { message: 'Style is required.' }),
+    duration: z.coerce.number().min(1, { message: 'Duration is required.' }),
 })
 
 const CompanionForm = () => {
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
             name: '',
             subject: '',
@@ -49,18 +49,23 @@ const CompanionForm = () => {
     })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        // @ts-ignore
         const companion = await createCompanion(values);
 
-        if(companion) {
+        if (companion) {
             redirect(`/companions/${companion.id}`);
         } else {
             console.log('Failed to create a companion');
-            redirect('/');
+            // Set a root error to display to the user
+            form.setError('root', {
+                type: 'server',
+                message: 'Failed to create companion. Please ensure the database is set up (run supabase_setup.sql).'
+            });
         }
     }
 
     return (
-        <Form {...form}>
+        <Form {...(form as any)}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
@@ -211,8 +216,12 @@ const CompanionForm = () => {
                     )}
                 />
                 <Button type="submit" className="w-full cursor-pointer">Build Your Companion</Button>
+                {/* Simple error message display since no toast component is available */}
+                {form.formState.errors.root && (
+                    <p className="text-red-500 text-sm text-center mt-2">{form.formState.errors.root.message}</p>
+                )}
             </form>
-        </Form>
+        </Form >
     )
 }
 

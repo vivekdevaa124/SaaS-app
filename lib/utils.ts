@@ -8,18 +8,18 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getSubjectColor = (subject: string) => {
-  return subjectsColors[subject as keyof typeof subjectsColors];
+  return subjectsColors[subject as keyof typeof subjectsColors] || '#f9f9f9';
 };
 
 export const configureAssistant = (voice: string, style: string) => {
   const voiceId = voices[voice as keyof typeof voices][
-          style as keyof (typeof voices)[keyof typeof voices]
-          ] || "sarah";
+    style as keyof (typeof voices)[keyof typeof voices]
+  ] || "sarah";
 
   const vapiAssistant: CreateAssistantDTO = {
     name: "Companion",
     firstMessage:
-        "Hello, let's start the session. Today we'll be talking about {{topic}}.",
+      "Hello, let's start the session. Today we'll be talking about {{topic}}.",
     transcriber: {
       provider: "deepgram",
       model: "nova-3",
@@ -54,8 +54,40 @@ export const configureAssistant = (voice: string, style: string) => {
         },
       ],
     },
-    clientMessages: [],
-    serverMessages: [],
+    clientMessages: [] as any,
+    serverMessages: [] as any,
   };
   return vapiAssistant;
 };
+
+import qs from "query-string";
+
+export function formUrlQuery({ params, key, value }: any) {
+  const currentUrl = qs.parse(params);
+
+  currentUrl[key] = value;
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    { skipNull: true }
+  );
+}
+
+export function removeKeysFromUrlQuery({ params, keysToRemove }: any) {
+  const currentUrl = qs.parse(params);
+
+  keysToRemove.forEach((key: any) => {
+    delete currentUrl[key];
+  });
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    { skipNull: true }
+  );
+}
