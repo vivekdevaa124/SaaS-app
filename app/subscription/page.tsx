@@ -1,4 +1,4 @@
-import {PricingTable} from "@clerk/nextjs";
+import { PricingTable } from "@clerk/nextjs";
 
 const Subscription = () => {
     return (
@@ -7,4 +7,5 @@ const Subscription = () => {
         </main>
     )
 }
+
 export default Subscription

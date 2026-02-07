@@ -17,13 +17,16 @@ enum Subject {
   business = "business",
 }
 
-type Companion = Models.DocumentList<Models.Document> & {
-  $id: string;
+type Companion = {
+  id: string; // Changed from $id (Appwrite) to id (Supabase)
   name: string;
   subject: Subject;
   topic: string;
   duration: number;
   bookmarked: boolean;
+  author: string; // Added author field as it's used in actions
+  created_at?: string; // Standard Supabase field
+  updated_at?: string;
 };
 
 interface CreateCompanion {

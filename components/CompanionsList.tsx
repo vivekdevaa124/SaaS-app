@@ -8,9 +8,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {cn, getSubjectColor} from "@/lib/utils";
+import { cn, getSubjectColor } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { Companion } from "@/types/index";
 
 interface CompanionsListProps {
     title: string;
@@ -32,7 +33,7 @@ const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) 
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {companions?.map(({id, subject, name, topic, duration}) => (
+                    {companions?.map(({ id, subject, name, topic, duration }) => (
                         <TableRow key={id}>
                             <TableCell>
                                 <Link href={`/companions/${id}`}>
@@ -59,13 +60,13 @@ const CompanionsList = ({ title, companions, classNames }: CompanionsListProps) 
                                 <div className="subject-badge w-fit max-md:hidden">
                                     {subject}
                                 </div>
-                                <div className="flex items-center justify-center rounded-lg w-fit p-2 md:hidden" style={{backgroundColor: getSubjectColor(subject)}}>
-                            <Image
-                                src={`/icons/${subject}.svg`}
-                                alt={subject}
-                                width={18}
-                                height={18}
-                            />
+                                <div className="flex items-center justify-center rounded-lg w-fit p-2 md:hidden" style={{ backgroundColor: getSubjectColor(subject) }}>
+                                    <Image
+                                        src={`/icons/${subject}.svg`}
+                                        alt={subject}
+                                        width={18}
+                                        height={18}
+                                    />
                                 </div>
                             </TableCell>
                             <TableCell>
