@@ -1,0 +1,1 @@
+﻿lib/utils.ts(31,7): error TS2353: Object literal may only specify known properties, and 'speaker' does not exist in type 'RimeAIVoice'.
