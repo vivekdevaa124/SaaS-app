@@ -21,22 +21,18 @@ export const configureAssistant = (voice: string, style: string) => {
     firstMessage:
       "Hello, let's start the session. Today we'll be talking about {{topic}}.",
     transcriber: {
-      provider: "deepgram",
-      model: "nova-3",
+      provider: "speechmatics",
       language: "en",
+      customVocabulary: [],
     },
     voice: {
-      provider: "11labs",
-      voiceId: voiceId,
-      stability: 0.4,
-      similarityBoost: 0.8,
-      speed: 1,
-      style: 0.5,
-      useSpeakerBoost: true,
+      provider: "rime-ai",
+      model: "mist",
+      voiceId: "abbie",
     },
     model: {
-      provider: "openai",
-      model: "gpt-4",
+      provider: "cerebras",
+      model: "llama3.1-8b",
       messages: [
         {
           role: "system",

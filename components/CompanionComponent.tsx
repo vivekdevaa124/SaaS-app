@@ -88,7 +88,7 @@ const CompanionComponent = ({ companionId, subject, topic, name, userName, userI
             else if (Object.keys(error).length === 0) errorMessage = "Connection failed silently (Check Vapi Dashboard logs)";
             else errorMessage = JSON.stringify(error);
 
-            alert(`Connection Error: ${errorMessage}. \n\nCheck your Vapi Dashboard for missing Provider Keys (OpenAI, Deepgram, 11Labs).`);
+            alert(`Connection Error: ${errorMessage}. \n\nCheck your Vapi Dashboard Integrations or logs. Ensure your keys are valid and the providers are active.`);
         };
 
         vapi.on('call-start', onCallStart);
