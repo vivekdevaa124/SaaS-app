@@ -16,36 +16,67 @@
 
 <br />
 
-The application uses **Vapi AI** to connect the latest Speech-to-Text (STT), Large Language Models (LLMs), and Text-to-Speech (TTS) providers into a seamless, low-latency voice experience.
+Welcome to the **AI Voice Companion SaaS**. This project is a full-stack web application designed to provide users with interactive, low-latency voice tutoring sessions. It leverages the latest advancements in AI infrastructure to create a seamless conversational experience, acting as a personal tutor, language practice partner, or conversational companion.
 
-## ✨ Features
+## 🌟 Comprehensive Features
 
-- **Real-time Voice Conversations:** Talk naturally with AI companions with low latency.
-- **Customizable AI Personas:** Support for different subjects, topics, and teaching styles.
-- **Robust Authentication:** Secure user management and sign-in via [Clerk](https://clerk.com/).
-- **Database Architecture:** Stores companions, session history, and bookmarks securely in [Supabase](https://supabase.com/).
-- **Provider Integrations:** Configured to use top-tier AI providers via [Vapi](https://vapi.ai/):
-  - 👂 **Transcription (STT):** Speechmatics
-  - 🧠 **Brain (LLM):** Cerebras (`llama3.1-8b`)
-  - 🗣️ **Voice (TTS):** RimeAI (`mist` model, `abbie` voice)
+### 1. Ultra-Low Latency Voice Interaction
+The core of this application is its ability to handle real-time voice conversations. By utilizing **Vapi AI** as middleware, the application connects directly to top-tier AI providers, bypassing traditional slow REST APIs for streaming audio processing. This results in human-like response times during conversations.
+
+### 2. Provider Ecosystem
+We have configured the application to use highly specialized AI providers to optimize for both speed and quality:
+- 👂 **Transcription (STT - Speechmatics):** Converts user speech into text with high accuracy, even recognizing different accents and custom vocabularies.
+- 🧠 **Brain (LLM - Cerebras):** The `llama3.1-8b` model running on Cerebras hardware provides near-instantaneous text generation, acting as the intelligent core of the companion.
+- 🗣️ **Voice (TTS - RimeAI):** The `mist` model provides highly realistic, emotionally nuanced text-to-speech generation.
+
+### 3. Dynamic AI Personas
+Users are not locked into a single AI personality. The application allows for the creation and customization of different companions based on:
+- **Subjects:** Mathematics, Science, History, Language Arts, etc.
+- **Topics:** Specific sub-categories within a subject.
+- **Teaching Styles:** Accommodating different learning preferences (e.g., Socratic method, direct instruction).
+
+### 4. Full-Stack Infrastructure
+- **Secure Authentication:** Integrated with **Clerk** to handle user sign-ups, logins, and session management securely.
+- **Persistent Storage:** A relational database powered by **Supabase** (PostgreSQL) stores user profiles, companion configurations, and a comprehensive history of past sessions.
+
+---
+
+## 🏗️ Architecture & Data Flow
+
+The architecture is designed for modern serverless environments:
+
+1. **Frontend (Next.js App Router):** Handles the UI, state management, and initiates the WebRTC connection to Vapi.
+2. **Authentication (Clerk):** Protects routes and ensures only authenticated users can access the dashboard and initiate calls.
+3. **Voice Middleware (Vapi SDK):** The client-side `@vapi-ai/web` SDK connects directly to Vapi's servers. Vapi handles the complex orchestration of sending audio to Speechmatics, passing the transcript to Cerebras, and streaming the generated audio back from RimeAI to the browser.
+4. **Backend/Database (Supabase):** Next.js Server Actions communicate securely with Supabase to read and write companion data and session histories.
+
+---
 
 ## 🛠️ Technology Stack
 
-| Category | Technology |
-| --- | --- |
-| **Framework** | Next.js (App Router, Turbopack) |
-| **UI & Styling** | React 19, Tailwind CSS v4, Lucide Icons |
-| **Database** | Supabase (PostgreSQL) |
-| **Authentication** | Clerk |
-| **AI / Middleware** | Vapi AI (`@vapi-ai/web`) |
-| **Error Tracking** | Sentry |
+| Category | Technology | Purpose |
+| --- | --- | --- |
+| **Framework** | Next.js 15+ (App Router) | Server-side rendering, routing, API endpoints |
+| **Styling** | Tailwind CSS v4 | Utility-first responsive design |
+| **UI Components**| Radix UI & Lucide Icons | Accessible component primitives and iconography |
+| **Database** | Supabase (PostgreSQL) | Relational database for application state |
+| **Authentication**| Clerk | Secure user identity management |
+| **AI Orchestration**| Vapi AI (`@vapi-ai/web`) | WebRTC connection and AI provider routing |
+| **Error Tracking** | Sentry | Production monitoring and debugging |
+
+---
 
 ## 🚀 Getting Started
 
+Follow these instructions to set up the project locally.
+
 ### Prerequisites
 
-- Node.js & npm installed on your machine.
-- Accounts for [Clerk](https://clerk.dev), [Supabase](https://supabase.com), and [Vapi](https://vapi.ai).
+- Node.js (v18 or higher) & npm installed.
+- **Accounts Required:**
+  - [Clerk](https://clerk.dev) (Authentication)
+  - [Supabase](https://supabase.com) (Database)
+  - [Vapi](https://vapi.ai) (Voice AI Middleware)
 
 ### 1. Clone the repository
 
@@ -55,38 +86,39 @@ cd SaaS-app
 npm install
 ```
 
-### 2. Set up your Environment Variables
+### 2. Set up Environment Variables
 
-Create a `.env.local` file in the root of the project by copying the example format:
+Create exactly one `.env.local` file in the root of the project. Copy the template below and fill in your specific keys from the respective dashboards.
 
 ```env
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-CLERK_SECRET_KEY=your_clerk_secret_key
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=your_clerk_sign_in_url
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=your_clerk_sign_up_url
+# Clerk Authentication (Get from Clerk Dashboard -> API Keys)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=...
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=...
 
-# Supabase Database
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Supabase Database (Get from Supabase Dashboard -> Project Settings -> API)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 
-# Vapi AI Voice
-NEXT_PUBLIC_VAPI_WEB_TOKEN=your_vapi_public_key
+# Vapi AI Voice (Get from Vapi Dashboard -> API Keys -> Public Key)
+NEXT_PUBLIC_VAPI_WEB_TOKEN=...
 ```
 
-### 3. Setup the Database
+### 3. Setup the Database Schema
 
-You need to create the required tables in your Supabase project.
+You need to create the required tables in your Supabase project. We have provided an SQL script to automate this.
 
-1. Go to your Supabase Dashboard -> SQL Editor.
-2. Open the `supabase_setup.sql` file from the root of this project.
-3. Paste the contents into the SQL Editor and run it to create the `companions`, `session_history`, and `bookmarks` tables.
+1. Go to your Supabase Dashboard -> **SQL Editor**.
+2. Open the `supabase_setup.sql` file located in the root of this project.
+3. Paste the contents into the Supabase SQL Editor and click **Run**. This creates the `companions`, `session_history`, and `bookmarks` tables.
 
 ### 4. Configure Vapi Integrations
 
-To ensure the AI voice calls work, verify your Vapi account is set up with the required integrations:
+To ensure the AI voice calls route successfully, you must link your provider accounts within Vapi.
 1. Go to your [Vapi Dashboard](https://dashboard.vapi.ai).
-2. Under "Integrations", add API keys for **Speechmatics**, **Cerebras**, and **RimeAI**.
+2. Navigate to **Integrations** on the left menu.
+3. Add your distinct API keys for **Speechmatics**, **Cerebras**, and **RimeAI**. Make sure they show as "Connected".
 
 ### 5. Start the Development Server
 
@@ -94,23 +126,37 @@ To ensure the AI voice calls work, verify your Vapi account is set up with the r
 npm run dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
+The application will now cleanly boot and be available at [http://localhost:3000](http://localhost:3000).
 
-## 🗂️ Project Structure
+---
 
-- `/app` - Next.js app router pages, layouts, and API routes.
-- `/components` - Reusable React components (e.g., `CompanionComponent.tsx`, `Sidebar.tsx`).
-- `/lib` - Utility functions, Vapi configuration (`utils.ts`), and Supabase client setup.
-- `/types` - TypeScript type definitions.
-- `/constants` - Application constants, predefined voice configurations, and theme colors.
+## 🗂️ Project Structure Deep Dive
+
+- `/app` - Contains the Next.js App Router structure.
+  - `(auth)` - Clerk authentication routes (`/sign-in`, `/sign-up`).
+  - `(app)` - Protected application routes including the main `/dashboard`.
+  - `/companions/[id]` - Dynamic route for starting a voice session with a specific companion.
+- `/components` - Reusable modular React components.
+  - `CompanionComponent.tsx` - The core functional component that handles the Vapi WebRTC connection, microphone toggling, and displays the transcript.
+- `/lib` - Core business logic and integrations.
+  - `utils.ts` - Contains the `configureAssistant` function where the Vapi payload (model, voice, transcriber settings) is dynamically generated based on the selected companion.
+  - `supabase.ts` - The initialized Supabase client for database operations.
+  - `actions/` - Next.js Server Actions for handling database mutations securely on the server.
+- `/types` - Strict TypeScript interfaces defining the shape of our data (e.g., `Companion`, `Session`).
+
+---
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome!
+We welcome contributions! If you'd like to improve the project, please follow these steps:
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Ensure types and linting pass (`npm run lint` and `npx tsc --noEmit`)
-4. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-5. Push to the Branch (`git push origin feature/AmazingFeature`)
-6. Open a Pull Request
+1. **Fork the Project**
+2. **Create your Feature Branch:** `git checkout -b feature/AmazingFeature`
+3. **Maintain Code Quality:** Ensure types and linting pass before committing. We enforce strict typing.
+   ```bash
+   npm run lint
+   npx tsc --noEmit
+   ```
+4. **Commit your Changes:** `git commit -m 'Add some AmazingFeature'`
+5. **Push to the Branch:** `git push origin feature/AmazingFeature`
+6. **Open a Pull Request**
